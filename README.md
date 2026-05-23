@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 11 meses — Regalo web ARG
 
-## Getting Started
+Mini web app romántica: tres pasos (palabra clave → fecha → ordenar 11 momentos) y un poema de 20 líneas que termina con **Maite Zaitut per sempre vita mia**.
 
-First, run the development server:
+## Personalizar antes de desplegar
+
+Edita estos archivos:
+
+| Archivo | Qué cambiar |
+|---------|-------------|
+| [`src/content/clues.ts`](src/content/clues.ts) | `KEYWORD_1`, `RELATIONSHIP_DATE`, pistas y textos de carta/WhatsApp |
+| [`src/content/moments.ts`](src/content/moments.ts) | Las 11 frases de cada mes |
+| [`src/content/poema.ts`](src/content/poema.ts) | El poema completo |
+
+**Valores configurados:**
+
+- Palabra clave: `dios`
+- Fecha de inicio: `23/06/2025` → también válido como `23062025`
+
+### Fotos de los 11 meses (opcional)
+
+1. Copia tus fotos en [`public/meses/`](public/meses/) con nombres `01.jpg`, `02.jpg`, … `11.jpg` (una por mes).
+2. En [`src/content/moments.ts`](src/content/moments.ts), añade `image: "01.jpg"` (etc.) en cada momento.
+3. También puedes adjuntarlas en el chat de Cursor y pedir que las integre el agente.
+
+Sin fotos, el paso 3 funciona igual con solo texto.
+
+## Desarrollo local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para probar desde cero, borra el progreso en las DevTools del navegador: Application → Local Storage → elimina `once-meses-progress`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Desplegar en Vercel
 
-## Learn More
+1. Sube el proyecto a GitHub (repositorio privado recomendado).
+2. Entra en [vercel.com](https://vercel.com) → **Add New Project** → importa el repo.
+3. Framework: **Next.js** (detectado automáticamente). No hace falta variables de entorno.
+4. Deploy. Tu URL será algo como `https://once-meses.vercel.app`.
 
-To learn more about Next.js, take a look at the following resources:
+## QR y carta física
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Cuando tengas la URL de Vercel, genera un QR en [qr-code-generator.com](https://www.qr-code-generator.com/) apuntando a esa URL.
+2. Imprime el QR en una carta o sobre. Texto sugerido para la carta:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   > Hay un sobre que solo se abre para quien conoce nuestra historia.  
+   > Escanea el código — la primera llave es la palabra con la que siempre nos decimos te quiero.
 
-## Deploy on Vercel
+3. La **segunda llave** (fecha) envíala por WhatsApp más tarde, con el enlace de respaldo. Plantilla en `WHATSAPP_MESSAGE_TEMPLATE` dentro de [`src/content/clues.ts`](src/content/clues.ts).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Flujo del ARG
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+/          → Paso 1: palabra clave (carta + QR)
+/juego     → Paso 2: fecha | Paso 3: ordenar 11 momentos
+/poema     → Poema completo + confeti
+```
+
+El progreso se guarda en `localStorage` para que pueda cerrar el móvil y continuar.
+
+## Estructura
+
+```text
+src/
+├── app/           # Rutas Next.js
+├── components/    # UI del ARG
+├── content/       # Poema, pistas, momentos (editable)
+└── lib/           # Validación y progreso
+```
+
+## Nota sobre las respuestas
+
+Las soluciones están en el código del cliente (normal para un regalo). No uses esto para datos sensibles.
